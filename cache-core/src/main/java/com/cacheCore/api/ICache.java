@@ -1,5 +1,6 @@
 package com.cacheCore.api;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,4 +35,38 @@ public interface ICache<K, V> extends Map<K, V> {
      * @return 处理类实现
      */
     ICacheExpire<K, V> expire();
+
+    /**
+     * 加载信息
+     *
+     * @return 加载信息
+     */
+    ICacheLoad<K, V> load();
+
+    /**
+     * 持久化类
+     *
+     * @return 持久化类
+     */
+    ICachePersist<K, V> persist();
+
+    /**
+     * 淘汰策略
+     *
+     * @return 淘汰
+     */
+    ICacheEvict<K, V> evict();
+
+    /**
+     * 删除监听类列表
+     *
+     * @return 监听器列表
+     */
+    List<ICacheRemoveListener<K, V>> removeListeners();
+
+    /**
+     * 慢日志监听类列表
+     * @return 监听器列表
+     */
+    List<ICacheSlowListener> slowListeners();
 }

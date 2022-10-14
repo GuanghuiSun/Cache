@@ -1,5 +1,7 @@
 package com.cacheCore.api;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * 缓存加载接口
  *
@@ -13,5 +15,5 @@ public interface ICacheLoad<K, V> {
      *
      * @param cache 缓存
      */
-    void load(final ICache<K, V> cache);
+    void load(final ICache<K, V> cache) throws InvocationTargetException, IllegalAccessException;
 }

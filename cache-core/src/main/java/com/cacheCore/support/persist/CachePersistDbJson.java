@@ -4,12 +4,15 @@ package com.cacheCore.support.persist;
 import com.alibaba.fastjson.JSON;
 import com.cacheCore.api.ICache;
 import com.cacheCore.model.PersistDbEntry;
+import com.cacheCore.support.util.FileUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -34,40 +37,28 @@ public class CachePersistDbJson<K, V> extends CachePersistAdaptor<K, V> {
     /**
      * 持久化
      * 格式: key长度 key+value
+     *
      * @param cache 缓存
      */
     @Override
     public void persist(ICache<K, V> cache) {
-        if (path == null || path.length() == 0) return ;
+        if (path == null || path.length() == 0) return;
         Set<Map.Entry<K, V>> entries = cache.entrySet();
-        BufferedWriter bw = null;
 
-        try {
-            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path)), StandardCharsets.UTF_8.newEncoder()));
+        List<String> lines = new ArrayList<>();
 
-            for (Map.Entry<K, V> entry : entries) {
-                K key = entry.getKey();
-                Long expireTime = cache.expire().expireTime(key);
-                PersistDbEntry<K, V> dbEntry = new PersistDbEntry<>();
-                dbEntry.setKey(key);
-                dbEntry.setValue(entry.getValue());
-                dbEntry.setExpire(expireTime);
+        for (Map.Entry<K, V> entry : entries) {
+            K key = entry.getKey();
+            Long expireTime = cache.expire().expireTime(key);
+            PersistDbEntry<K, V> dbEntry = new PersistDbEntry<>();
+            dbEntry.setKey(key);
+            dbEntry.setValue(entry.getValue());
+            dbEntry.setExpire(expireTime);
 
-                String line = JSON.toJSONString(dbEntry);
-                bw.append(line);
-                bw.newLine();
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (bw != null)
-                    bw.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            String line = JSON.toJSONString(dbEntry);
+            lines.add(line);
         }
+        FileUtils.writeAll(path, lines);
     }
 
     @Override
