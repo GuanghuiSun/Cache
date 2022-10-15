@@ -10,6 +10,7 @@ import com.cacheCore.support.load.CacheLoads;
 import com.cacheCore.support.persist.CachePersists;
 import com.cacheCore.support.proxy.CacheProxy;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -175,7 +176,7 @@ public class CacheBs<K, V> {
      *
      * @return 缓存信息
      */
-    public ICache<K, V> build() {
+    public ICache<K, V> build() throws InvocationTargetException, IllegalAccessException {
         Cache<K, V> cache = new Cache<>();
         cache.map(map);
         cache.evict(evict);

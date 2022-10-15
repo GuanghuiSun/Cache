@@ -5,14 +5,13 @@ import com.cacheCore.annotation.CacheInterceptor;
 import com.cacheCore.api.*;
 import com.cacheCore.constant.CacheRemoveType;
 import com.cacheCore.exception.CacheRuntimeException;
-import com.cacheCore.model.PersistDbEntry;
 import com.cacheCore.support.evict.CacheEvictContext;
 import com.cacheCore.support.expire.CacheExpire;
 import com.cacheCore.support.listener.remove.CacheRemoveListenerContext;
 import com.cacheCore.support.persist.InnerCachePersist;
 import com.cacheCore.support.proxy.CacheProxy;
-import com.cacheCore.support.proxy.bs.CacheProxyBs;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -64,7 +63,7 @@ public class Cache<K, V> implements ICache<K, V> {
     /**
      * 初始化
      */
-    public void init() {
+    public void init() throws InvocationTargetException, IllegalAccessException {
         this.expire = new CacheExpire<>(this);
         this.load.load(this);
 

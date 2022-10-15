@@ -34,6 +34,6 @@ public class DynamicProxy implements InvocationHandler, ICacheProxy {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         CacheProxyBsContext context = CacheProxyBsContext.newInstance().
                 method(method).params(args).target(this.target);
-        return CacheProxyBs.newInstance().context(context).e;
+        return CacheProxyBs.newInstance().context(context).execute();
     }
 }

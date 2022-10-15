@@ -6,6 +6,8 @@ import com.cacheCore.api.ICacheEvictContext;
 import com.cacheCore.model.CacheEntry;
 import com.cacheCore.support.struct.DoublyLinkedList;
 
+import java.util.LinkedList;
+
 /**
  * 驱除策略 —— FIFO 先进先出策略
  *
@@ -19,7 +21,7 @@ public class CacheEvictFifo<K, V> extends AbstractCacheEvict<K, V>{
     /**
      * 队列 —— 双向链表实现
      */
-    private final DoublyLinkedList<K> queue = new DoublyLinkedList<K>();
+    private final DoublyLinkedList<K> queue = new DoublyLinkedList<>();
 
     @Override
     protected ICacheEntry<K, V> doEvict(ICacheEvictContext<K, V> context) {
@@ -30,7 +32,7 @@ public class CacheEvictFifo<K, V> extends AbstractCacheEvict<K, V>{
         if (cache.size() >= context.size()) {
             K evictKey = queue.remove();
             V evictValue = cache.remove(evictKey);
-            res = new CacheEntry<K, V>(evictKey, evictValue);
+            res = new CacheEntry<>(evictKey, evictValue);
         }
 
         //将新加的元素添加到队尾
