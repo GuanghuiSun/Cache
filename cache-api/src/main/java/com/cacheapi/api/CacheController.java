@@ -3,8 +3,10 @@ package com.cacheapi.api;
 import com.cacheapi.model.CacheEntity;
 import com.cacheapi.server.ServerConfig;
 import com.cacheapi.server.ServerNode;
+import com.cacheapi.singleFlight.CallManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import sun.util.resources.cldr.ar.CalendarData_ar_LB;
 
 import javax.annotation.Resource;
 
@@ -29,7 +31,12 @@ public class CacheController {
      * @return value
      */
     @GetMapping("/{key}")
-    public String get(@PathVariable String key) {
+    public String getWithSingleFlight(@PathVariable String key) {
+        CallManager callManager = new CallManager();
+        return callManager.run(key, this::get);
+    }
+
+    private String get(String key) {
         ServerNode<String, String> node = serverConfig.router().getTargetServerNode(key);
         log.debug("Get key:{} value from server node: {}", key, node.addr());
         return node.cache().get(key);
